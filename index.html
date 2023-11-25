@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: pink;
+            text-align: center;
+            margin: 50px;
+        }
+
+        h1 {
+            color: blue;
+        }
+
+        #taskInput {
+            padding: 10px;
+            width: 200px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        li {
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: violet;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Todo List App</h1>
+
+    <input type="text" id="taskInput" placeholder="Add a new task">
+    <button onclick="addTask()">Add Task</button>
+    <button onclick="readTasks()">Read Tasks</button>
+    <button onclick="updateTask()">Update Task</button>
+    <button onclick="deleteTask()">Delete Task</button>
+
+    <ul id="taskList"></ul>
+
+    <script>
+        // Check if there are tasks in local storage and load them
+        document.addEventListener("DOMContentLoaded", function () {
+            loadTasks();
+        });
+
+        function addTask() {
+            var taskInput = document.getElementById("taskInput");
+            var taskList = document.getElementById("taskList");
+
+            if (taskInput.value.trim() === "") {
+                alert("Please enter a task");
+                return;
+            }
+
+            // Create a new task item
+            var li = document.createElement("li");
+            li.textContent = taskInput.value;
+
+            // Add the task to the list
+            taskList.appendChild(li);
+
+            // Save tasks to local storage
+            saveTasks();
+
+            // Clear the input field
+            taskInput.value = "";
+        }
+
+        function readTasks() {
+            // Reading tasks is already done when the page loads (in the loadTasks function)
+            // This button is included for completeness in the example
+        }
+
+        function updateTask() {
+            // For simplicity, updating a task in this example is considered the same as adding a new task
+            addTask();
+        }
+
+        function deleteTask() {
+            var taskList = document.getElementById("taskList");
+            
+            if (taskList.children.length === 0) {
+                alert("No tasks to delete");
+                return;
+            }
+
+            // Remove the last task from the list
+            taskList.removeChild(taskList.lastElementChild);
+
+            // Save tasks to local storage
+            saveTasks();
+        }
+
+        function saveTasks() {
+            var taskList = document.getElementById("taskList");
+            var tasks = [];
+
+            // Get all tasks from the list
+            for (var i = 0; i < taskList.children.length; i++) {
+                tasks.push(taskList.children[i].textContent);
+            }
+
+            // Save tasks to local storage
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            var taskList = document.getElementById("taskList");
+            var tasks = localStorage.getItem("tasks");
+
+            if (tasks) {
+                tasks = JSON.parse(tasks);
+
+                // Add tasks to the list
+                for (var i = 0; i < tasks.length; i++) {
+                    var li = document.createElement("li");
+                    li.textContent = tasks[i];
+
+                    taskList.appendChild(li);
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
